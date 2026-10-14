@@ -36,6 +36,8 @@ pipeline {
                         -Dsonar.host.url=https://sonarcloud.io ^
                         -Dsonar.token=%SONAR_TOKEN%
                         -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                        -Dsonar.qualitygate.wait=true ^
+                        -Dsonar.qualitygate.timeout=300
                     '''
                 }
             }
