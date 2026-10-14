@@ -35,6 +35,7 @@ pipeline {
                         -Dsonar.organization=herneshem ^
                         -Dsonar.host.url=https://sonarcloud.io ^
                         -Dsonar.token=%SONAR_TOKEN%
+                        -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                     '''
                 }
             }
