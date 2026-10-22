@@ -5,6 +5,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -54,8 +56,23 @@ public class JwtService {
             String token,
             UserDetails userDetails) {
 
-        String username = extractUsername(token);
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        return username.equals(userDetails.getUsername());
+            String username = claims.getSubject();
+            Date expiration = claims.getExpiration();
+
+            return username != null
+                    && username.equals(userDetails.getUsername())
+                    && expiration != null
+                    && expiration.after(new Date());
+
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }
